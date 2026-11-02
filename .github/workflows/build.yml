@@ -1,0 +1,29 @@
+name: Build NumWorks TXT Reader
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get source code
+        uses: actions/checkout@v4
+
+      - name: Install ARM compiler
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y make gcc-arm-none-eabi
+
+      - name: Compile application
+        run: make clean build
+
+      - name: Upload NWA
+        uses: actions/upload-artifact@v4
+        with:
+          name: TXT-Reader-Numworks
+          path: output/build/app_stripped.nwa
+          if-no-files-found: error
